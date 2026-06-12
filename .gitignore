@@ -1,0 +1,40 @@
+# Ignore root and subdirectory Makefiles
+/Makefile
+/make.include
+**/Makefile
+
+# Ignore configuration logs and caches everywhere
+**/config.cache
+**/config.log
+**/config.status
+**/*Config.sh
+**/pkgIndex.tcl
+
+# Ignore build output folders
+/bin/
+/build/
+/lib/
+/include/
+/dist/
+/share/
+
+# Ignore compiled object files, archives, and libraries
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.o.d
+
+# Ignore specific intermediate build outputs
+openssl/include/
+openssl/libcrypto.pc
+openssl/libssl.pc
+openssl/openssl.pc
+openssl/rehash.time
+tkimg/libtiff/libtool
+tkimg/libtiff/libtiff-4.pc
+tkimg/libpng/pnglibconf.h
+tktable/tkTable.tcl.h
+tktable/tkTableUuid.h

@@ -18,7 +18,7 @@ jobs:
         uses: egor-tensin/setup-cygwin@v4
         with:
           packages: >-
-            make autoconf automake git zip unzip patch pkg-config dos2unix
+            make autoconf automake git zip unzip patch pkg-config
             mingw64-x86_64-gcc-core mingw64-x86_64-gcc-g++
             mingw64-x86_64-libxml2 mingw64-x86_64-libxslt
             mingw64-x86_64-zlib
@@ -29,7 +29,6 @@ jobs:
           cd "$(cygpath "$GITHUB_WORKSPACE")"
           git config --global --add safe.directory '*'
           find . -type f \( -name "configure" -o -name "*.sh" -o -name "install-sh" -o -name "config.sub" -o -name "config.guess" \) -exec chmod +wx {} +
-          find . -type f \( -name "configure" -o -name "*.sh" -o -name "install-sh" -o -name "config.sub" -o -name "config.guess" \) -exec dos2unix -f {} +
           ./win/configure
           make -j$(nproc)
 

@@ -18,7 +18,7 @@ jobs:
         uses: egor-tensin/setup-cygwin@v4
         with:
           packages: >-
-            make autoconf automake git zip unzip patch pkg-config dos2unix
+            make autoconf automake git zip unzip patch pkg-config dos2unix perl
             mingw64-x86_64-gcc-core mingw64-x86_64-gcc-g++
             mingw64-x86_64-binutils
             mingw64-x86_64-libxml2 mingw64-x86_64-libxslt
@@ -33,10 +33,18 @@ jobs:
           export AR="x86_64-w64-mingw32-ar"
           export RANLIB="x86_64-w64-mingw32-ranlib"
           export WINDRES="x86_64-w64-mingw32-windres"
+          export RC="x86_64-w64-mingw32-windres"
+          export LD="x86_64-w64-mingw32-ld"
           cd "$(cygpath "$GITHUB_WORKSPACE")"
           git config --global --add safe.directory '*'
-          find . -type f \( -name "configure" -o -name "*.sh" -o -name "install-sh" -o -name "config.sub" -o -name "config.guess" \) -exec chmod +wx {} +
-          find . -type f \( -name "configure" -o -name "*.sh" -o -name "install-sh" -o -name "config.sub" -o -name "config.guess" \) -exec dos2unix -f {} +
+          # Force conversion of all shebang scripts, configuration scripts, and Makefiles to Unix line endings
+          find . -type f -exec grep -Iq '^#!' {} \; -exec dos2unix -f {} +
+          find . -type f \( -name "Configure" -o -name "configure" -o -name "*.sh" -o -name "install-sh" -o -name "config.sub" -o -name "config.guess" -o -name "Makefile" -o -name "Makefile.in" -o -name "make.include" -o -name "*.m4" -o -name "*.ac" \) -exec dos2unix -f {} +
+          # Make all shebang-starting files and configure/shell scripts executable
+          find . -type f -exec grep -Iq '^#!' {} \; -exec chmod +x {} +
+          find . -type f \( -name "configure" -o -name "*.sh" -o -name "install-sh" \) -exec chmod +x {} +
+          # Remove deprecated -mno-cygwin flag from OpenSSL Configure which causes modern GCC to fail
+          sed -i 's/-mno-cygwin//g' openssl/Configure
           ./win/configure --host=x86_64-w64-mingw32
           make -j$(nproc)
 

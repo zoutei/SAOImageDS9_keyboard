@@ -828,6 +828,7 @@ proc Button1Frame {which x y} {
     global ds9
     global current
     global imarker
+    global ppanzoom
 
     # let others know that the mouse is down
     set ds9(b1) 1
@@ -839,14 +840,16 @@ proc Button1Frame {which x y} {
 
     switch -- $current(mode) {
 	none {
-	    if {$which == $current(frame)} {
-	    } else {
+	    if {$which != $current(frame)} {
 		# we need this cause MarkerMotion maybe called, 
 		# and we don't want it
 		set imarker(motion) none
 		set imarker(handle) -1
 
 		GotoFrame $which
+	    }
+	    if {$ppanzoom(none,pan)} {
+		$which pan motion begin $x $y
 	    }
 	}
 	pointer -
@@ -874,7 +877,8 @@ proc Button1Frame {which x y} {
 	    ColorbarButton3 $which $x $y
 	}
 	pan {
-	    PanButton $which $x $y
+	    $which pan motion begin $x $y
+	    set ds9(pan,start) [list $x $y]
 	}
 	zoom {
 	    ZoomButton $which $x $y
@@ -1068,6 +1072,7 @@ proc ControlShiftButton1Frame {which x y} {
 proc Motion1Frame {which x y} {
     global ds9
     global current
+    global ppanzoom
 
     global debug
     if {$debug(tcl,events)} {
@@ -1081,7 +1086,14 @@ proc Motion1Frame {which x y} {
     }
 
     switch -- $current(mode) {
-	none {}
+	none {
+	    if {$ppanzoom(none,pan)} {
+		if {$ds9(b1)} {
+		    $which pan motion $x $y
+		    LockFrame $which
+		}
+	    }
+	}
 	pointer -
 	region {
 	    if {$which == $current(frame)} {
@@ -1109,7 +1121,7 @@ proc Motion1Frame {which x y} {
 	}
 	pan {
 	    if {$ds9(b1)} {
-		PanMotion $which $x $y
+		$which pan motion $x $y
 	    }
 	}
 	zoom {}
@@ -1163,6 +1175,7 @@ proc Motion1Frame {which x y} {
 proc Release1Frame {which x y} {
     global ds9
     global current
+    global ppanzoom
 
     global debug
     if {$debug(tcl,events)} {
@@ -1176,7 +1189,14 @@ proc Release1Frame {which x y} {
     }
 
     switch -- $current(mode) {
-	none {}
+	none {
+	    if {$ppanzoom(none,pan)} {
+		if {$ds9(b1)} {
+		    $which pan motion end $x $y
+		    UpdatePan $which
+		}
+	    }
+	}
 	pointer -
 	region {
 	    if {$which == $current(frame)} {
@@ -1199,7 +1219,17 @@ proc Release1Frame {which x y} {
 	}
 	pan {
 	    if {$ds9(b1)} {
-		PanRelease $which $x $y
+		$which pan motion end $x $y
+		if {[info exists ds9(pan,start)]} {
+		    set x_start [lindex $ds9(pan,start) 0]
+		    set y_start [lindex $ds9(pan,start) 1]
+		    set dx [expr abs($x - $x_start)]
+		    set dy [expr abs($y - $y_start)]
+		    if {$dx < 3 && $dy < 3} {
+			$which pan to $x $y
+		    }
+		}
+		UpdatePan $which
 	    }
 	}
 	zoom {}
@@ -1447,6 +1477,10 @@ proc KeyFrame {which K A xx yy} {
     }
 
     if {$ds9(modifier)} {
+	return
+    }
+
+    if {[ProcessShortcutKey $which $K $A $xx $yy]} {
 	return
     }
 

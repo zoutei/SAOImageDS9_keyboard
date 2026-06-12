@@ -1066,6 +1066,7 @@ proc ToggleFreeze {} {
 proc ChangeMode {} {
     global ds9
     global current
+    global ppanzoom
 
     foreach ff $ds9(frames) {
 	$ff crosshair off
@@ -1104,7 +1105,13 @@ proc ChangeMode {} {
 
     # cursor
     switch -- $current(mode) {
-	none -
+	none {
+	    if {$ppanzoom(none,pan)} {
+		SetCursor fleur
+	    } else {
+		SetCursor {}
+	    }
+	}
 	pointer -
 	region -
 	catalog -

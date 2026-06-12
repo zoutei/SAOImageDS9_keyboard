@@ -31,6 +31,8 @@ proc PanZoomDef {} {
     set ppanzoom(mode) click
     set ppanzoom(wheel) 1
     set ppanzoom(wheel,factor) 1.2
+    set panzoom(none,pan) 1
+    set ppanzoom(none,pan) 1
     # special case
     switch -- $tcl_platform(os) {
 	Darwin {
@@ -114,7 +116,10 @@ proc PanMotion {which x y} {
 
     switch -- $ppanzoom(mode) {
 	click {}
-	drag {$which pan motion $x $y}
+	drag {
+	    $which pan motion $x $y
+	    LockFrame $which
+	}
 	panzoom {}
     }
 }

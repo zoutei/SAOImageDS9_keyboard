@@ -32,7 +32,7 @@ jobs:
           git config --global --add safe.directory '*'
           find . -type f \( -name "configure" -o -name "*.sh" -o -name "install-sh" -o -name "config.sub" -o -name "config.guess" \) -exec chmod +wx {} +
           find . -type f \( -name "configure" -o -name "*.sh" -o -name "install-sh" -o -name "config.sub" -o -name "config.guess" \) -exec dos2unix -f {} +
-          ./win/configure
+          ./win/configure --host=x86_64-w64-mingw32 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++
           make -j$(nproc)
 
       - name: Package Windows Version

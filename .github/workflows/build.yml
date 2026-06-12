@@ -28,10 +28,8 @@ jobs:
         run: |
           cd "$(cygpath "$GITHUB_WORKSPACE")"
           git config --global --add safe.directory '*'
-          chmod -R +w .
-          find . -type f -name "configure" -exec dos2unix {} +
-          find . -type f -name "*.sh" -exec dos2unix {} +
-          chmod +x ./win/configure
+          find . -type f -name "configure" -exec chmod +wx {} + -exec dos2unix {} +
+          find . -type f -name "*.sh" -exec chmod +wx {} + -exec dos2unix {} +
           ./win/configure
           make -j$(nproc)
 

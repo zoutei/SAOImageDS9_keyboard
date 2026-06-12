@@ -91,6 +91,8 @@ jobs:
         run: |
           cd "$(cygpath "$GITHUB_WORKSPACE")"
           git config --global --add safe.directory '*'
+          find . -type f -name "configure" -exec sed -i 's/\r$//' {} +
+          find . -type f -name "*.sh" -exec sed -i 's/\r$//' {} +
           ./win/configure
           make -j$(nproc)
 

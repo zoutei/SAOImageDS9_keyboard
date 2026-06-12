@@ -65,3 +65,40 @@ jobs:
           name: ds9-macos
           path: |
             dist/*.dmg
+
+  build-windows:
+    name: Build on Windows
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Cygwin
+        uses: egor-tensin/setup-cygwin@v4
+        with:
+          platform: x64
+          packages: >-
+            make autoconf automake git zip unzip patch pkg-config
+            mingw64-x86_64-gcc-core mingw64-x86_64-gcc-g++
+            mingw64-x86_64-libxml2 mingw64-x86_64-libxslt
+            mingw64-x86_64-zlib
+
+      - name: Configure and Build
+        shell: cygwin {0}
+        run: |
+          ./win/configure
+          make -j$(nproc)
+
+      - name: Package Windows Version
+        shell: cygwin {0}
+        run: |
+          mkdir -p dist
+          cd bin
+          zip -r ../dist/SAOImageDS9-win64.zip SAOImageDS9
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ds9-windows
+          path: |
+            dist/*.zip

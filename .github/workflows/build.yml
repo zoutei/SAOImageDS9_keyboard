@@ -20,12 +20,14 @@ jobs:
           packages: >-
             make autoconf automake git zip unzip patch pkg-config dos2unix
             mingw64-x86_64-gcc-core mingw64-x86_64-gcc-g++
+            mingw64-x86_64-binutils
             mingw64-x86_64-libxml2 mingw64-x86_64-libxslt
             mingw64-x86_64-zlib
 
       - name: Configure and Build
         shell: C:\tools\cygwin\bin\bash.exe --login -o errexit -o pipefail -o igncr {0}
         run: |
+          export PATH="/usr/local/bin:/usr/bin:/bin"
           cd "$(cygpath "$GITHUB_WORKSPACE")"
           git config --global --add safe.directory '*'
           find . -type f \( -name "configure" -o -name "*.sh" -o -name "install-sh" -o -name "config.sub" -o -name "config.guess" \) -exec chmod +wx {} +
@@ -36,6 +38,7 @@ jobs:
       - name: Package Windows Version
         shell: C:\tools\cygwin\bin\bash.exe --login -o errexit -o pipefail -o igncr {0}
         run: |
+          export PATH="/usr/local/bin:/usr/bin:/bin"
           cd "$(cygpath "$GITHUB_WORKSPACE")"
           mkdir -p dist
           cd bin

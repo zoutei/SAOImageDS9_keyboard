@@ -1106,11 +1106,7 @@ proc ChangeMode {} {
     # cursor
     switch -- $current(mode) {
 	none {
-	    if {$ppanzoom(none,pan)} {
-		SetCursor fleur
-	    } else {
-		SetCursor {}
-	    }
+	    SetCursor {}
 	}
 	pointer -
 	region -

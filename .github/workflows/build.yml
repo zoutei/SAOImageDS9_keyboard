@@ -46,6 +46,10 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Install Dependencies
+        run: |
+          brew install autoconf automake libtool
+
       - name: Configure Build
         run: |
           ./macos/configure

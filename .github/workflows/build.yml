@@ -51,6 +51,8 @@ jobs:
           # Make all shebang-starting files and configure/shell scripts executable
           grep -rlZI --exclude-dir=.git '^#!' . | xargs -0 chmod +x || true
           find . -type f \( -name "Configure" -o -name "configure" -o -name "*.sh" -o -name "install-sh" \) -exec chmod +x {} + || true
+          # Prepend perl shebang to OpenSSL Configure so Cygwin can execute it directly
+          sed -i '1s/^/#! \/usr\/bin\/perl\n/' openssl/Configure
           # Remove deprecated -mno-cygwin flag from OpenSSL Configure which causes modern GCC to fail
           sed -i 's/-mno-cygwin//g' openssl/Configure
           ./win/configure --host=x86_64-w64-mingw32

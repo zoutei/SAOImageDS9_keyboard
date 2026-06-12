@@ -87,15 +87,17 @@ jobs:
             mingw64-x86_64-zlib
 
       - name: Configure and Build
-        shell: cygwin {0}
+        shell: C:\tools\cygwin\bin\bash.exe --login -o errexit -o pipefail -o igncr {0}
         run: |
+          cd "$(cygpath "$GITHUB_WORKSPACE")"
           git config --global --add safe.directory '*'
           ./win/configure
           make -j$(nproc)
 
       - name: Package Windows Version
-        shell: cygwin {0}
+        shell: C:\tools\cygwin\bin\bash.exe --login -o errexit -o pipefail -o igncr {0}
         run: |
+          cd "$(cygpath "$GITHUB_WORKSPACE")"
           mkdir -p dist
           cd bin
           zip -r ../dist/SAOImageDS9-win64.zip SAOImageDS9

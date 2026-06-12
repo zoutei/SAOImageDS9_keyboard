@@ -76,7 +76,6 @@ jobs:
       - name: Setup Cygwin
         uses: egor-tensin/setup-cygwin@v4
         with:
-          platform: x64
           packages: >-
             make autoconf automake git zip unzip patch pkg-config
             mingw64-x86_64-gcc-core mingw64-x86_64-gcc-g++
@@ -86,6 +85,7 @@ jobs:
       - name: Configure and Build
         shell: cygwin {0}
         run: |
+          git config --global --add safe.directory '*'
           ./win/configure
           make -j$(nproc)
 

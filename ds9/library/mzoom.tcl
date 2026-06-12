@@ -151,6 +151,12 @@ proc PrefsDialogZoom {} {
 
     grid $f.click $f.drag $f.panzoom -padx 2 -pady 2 -sticky w
 
+    # None Mode Pan
+    set f2 [ttk::labelframe $w.zoom.none -text [msgcat::mc {None Edit Mode}]]
+    ttk::checkbutton $f2.pan -text [msgcat::mc {Drag to Pan}] \
+	-variable ppanzoom(none,pan) -command ChangeMode
+    grid $f2.pan -padx 2 -pady 2 -sticky w
+
     # Mouse
     set f [ttk::labelframe $w.zoom.mouse -text [msgcat::mc {Mouse Wheel Zoom}]]
 
@@ -161,7 +167,7 @@ proc PrefsDialogZoom {} {
 
     grid $f.click $f.title2 $f.factor -padx 2 -pady 2 -sticky w
 
-    pack $w.zoom.panzoom $w.zoom.mouse -side top -fill both -expand true
+    pack $w.zoom.panzoom $w.zoom.none $w.zoom.mouse -side top -fill both -expand true
 }
 
 # Buttons

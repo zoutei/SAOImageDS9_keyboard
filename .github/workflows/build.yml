@@ -28,11 +28,16 @@ jobs:
         shell: C:\tools\cygwin\bin\bash.exe --login -o errexit -o pipefail -o igncr {0}
         run: |
           export PATH="/usr/local/bin:/usr/bin:/bin"
+          export CC="x86_64-w64-mingw32-gcc"
+          export CXX="x86_64-w64-mingw32-g++"
+          export AR="x86_64-w64-mingw32-ar"
+          export RANLIB="x86_64-w64-mingw32-ranlib"
+          export WINDRES="x86_64-w64-mingw32-windres"
           cd "$(cygpath "$GITHUB_WORKSPACE")"
           git config --global --add safe.directory '*'
           find . -type f \( -name "configure" -o -name "*.sh" -o -name "install-sh" -o -name "config.sub" -o -name "config.guess" \) -exec chmod +wx {} +
           find . -type f \( -name "configure" -o -name "*.sh" -o -name "install-sh" -o -name "config.sub" -o -name "config.guess" \) -exec dos2unix -f {} +
-          ./win/configure --host=x86_64-w64-mingw32 CC=x86_64-w64-mingw32-gcc CXX=x86_64-w64-mingw32-g++
+          ./win/configure --host=x86_64-w64-mingw32
           make -j$(nproc)
 
       - name: Package Windows Version

@@ -471,6 +471,7 @@ funtools/libfuntools.a : funtools/Makefile
 	cp funtools/filter/*.h $(includedir)/.
 	cp funtools/util/*.h $(includedir)/.
 	cp funtools/fitsy/*.h $(includedir)/.
+	cp funtools/filter/libfilter.a $(libdir)/.
 	cp funtools/libfuntools.a $(libdir)/.
 
 funtools/Makefile : funtools/configure
@@ -852,4 +853,3 @@ xpadistclean :
 	@echo ""
 	@echo "*** $@ ***"
 	$(MAKE) -C xpa distclean
-

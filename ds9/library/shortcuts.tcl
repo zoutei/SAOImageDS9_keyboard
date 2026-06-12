@@ -41,6 +41,7 @@ proc LoadShortcutConfig {} {
     set shortcuts(map,t) "display tile"
     set shortcuts(map,p) "mode pan"
     set shortcuts(map,r) "mode region"
+    set shortcuts(map,R) "MarkerLoad"
     set shortcuts(map,n) "mode none"
 
     # Search for config file
@@ -86,11 +87,11 @@ proc LoadShortcutConfig {} {
 		set key_part [string range $line 0 [expr $sep_idx - 1]]
 		set action_part [string range $line [expr $sep_idx + 1] end]
 
-		set key [string tolower [string trim $key_part]]
+		set key [string trim $key_part]
 		set action [string trim $action_part]
 
 		if {$key != "" && $action != ""} {
-		    if {$key == "timeout"} {
+		    if {[string tolower $key] == "timeout"} {
 			set shortcuts(timeout) $action
 		    } else {
 			set shortcuts(map,$key) $action
@@ -140,7 +141,6 @@ proc ProcessShortcutKey {which K A xx yy} {
     } else {
 	set key $K
     }
-    set key [string tolower $key]
 
     # Normalize shifted digits (e.g. ! -> 1, ( -> 9) to support holding Shift
     switch -exact -- $key {
@@ -154,6 +154,47 @@ proc ProcessShortcutKey {which K A xx yy} {
 	"*" { set key "8" }
 	"(" { set key "9" }
 	")" { set key "0" }
+    }
+
+    # If there is no exact case-sensitive map and no prefix, fallback to lowercase/uppercase
+    if {![info exists shortcuts(map,$key)]} {
+	set is_prefix 0
+	foreach seq [array names shortcuts map,*] {
+	    set seq_key [string range $seq 4 end]
+	    if {[string first $key $seq_key] == 0} {
+		set is_prefix 1
+		break
+	    }
+	}
+	if {!$is_prefix} {
+	    # Try lowercase fallback
+	    set lower_key [string tolower $key]
+	    set is_lower_prefix 0
+	    foreach seq [array names shortcuts map,*] {
+		set seq_key [string range $seq 4 end]
+		if {[string first $lower_key $seq_key] == 0} {
+		    set is_lower_prefix 1
+		    break
+		}
+	    }
+	    if {[info exists shortcuts(map,$lower_key)] || $is_lower_prefix} {
+		set key $lower_key
+	    } else {
+		# Try uppercase fallback
+		set upper_key [string toupper $key]
+		set is_upper_prefix 0
+		foreach seq [array names shortcuts map,*] {
+		    set seq_key [string range $seq 4 end]
+		    if {[string first $upper_key $seq_key] == 0} {
+			set is_upper_prefix 1
+			break
+		    }
+		}
+		if {[info exists shortcuts(map,$upper_key)] || $is_upper_prefix} {
+		    set key $upper_key
+		}
+	    }
+	}
     }
 
     # If there was a pending action and a new key is pressed, cancel it

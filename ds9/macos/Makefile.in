@@ -121,6 +121,7 @@ LLIBS	= \
 	$(libdir)/libast_err.a \
 	$(libdir)/libast_pal.a \
 	$(libdir)/libast_cminpack.a \
+	$(libdir)/libfilter.a \
 	$(libdir)/libfuntools.a \
 	$(libdir)/libxpa.a
 
@@ -229,4 +230,3 @@ clean	: parsersclean
 	$(RM) -f tkAppInit.c
 
 include ../make.include
-

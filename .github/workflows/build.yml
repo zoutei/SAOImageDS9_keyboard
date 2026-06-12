@@ -90,12 +90,15 @@ jobs:
         shell: cygwin {0}
         run: |
           git config --global --add safe.directory '*'
+          git config --global --add safe.directory "$(cygpath "$GITHUB_WORKSPACE")"
+          cd "$(cygpath "$GITHUB_WORKSPACE")"
           ./win/configure
           make -j$(nproc)
 
       - name: Package Windows Version
         shell: cygwin {0}
         run: |
+          cd "$(cygpath "$GITHUB_WORKSPACE")"
           mkdir -p dist
           cd bin
           zip -r ../dist/SAOImageDS9-win64.zip SAOImageDS9

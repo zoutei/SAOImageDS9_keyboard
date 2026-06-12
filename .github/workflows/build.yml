@@ -7,69 +7,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-linux:
-    name: Build on Linux
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Install Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y automake autoconf libx11-dev zlib1g-dev libxml2-dev libxslt1-dev libxft-dev zip tcl8.6-dev tk8.6-dev
-
-      - name: Configure Build
-        run: |
-          ./unix/configure
-
-      - name: Build
-        run: |
-          make -j$(nproc)
-
-      - name: Package
-        run: |
-          mkdir -p dist
-          make dist
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ds9-linux
-          path: |
-            dist/*.tar.gz
-
-  build-macos:
-    name: Build on macOS
-    runs-on: macos-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Install Dependencies
-        run: |
-          brew install autoconf automake libtool
-
-      - name: Configure Build
-        run: |
-          ./macos/configure
-
-      - name: Build
-        run: |
-          make -j$(sysctl -n hw.ncpu)
-
-      - name: Package
-        run: |
-          mkdir -p dist
-          make dist
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ds9-macos
-          path: |
-            dist/*.dmg
-
   build-windows:
     name: Build on Windows
     runs-on: windows-latest
@@ -81,7 +18,7 @@ jobs:
         uses: egor-tensin/setup-cygwin@v4
         with:
           packages: >-
-            make autoconf automake git zip unzip patch pkg-config
+            make autoconf automake git zip unzip patch pkg-config dos2unix
             mingw64-x86_64-gcc-core mingw64-x86_64-gcc-g++
             mingw64-x86_64-libxml2 mingw64-x86_64-libxslt
             mingw64-x86_64-zlib
@@ -91,8 +28,10 @@ jobs:
         run: |
           cd "$(cygpath "$GITHUB_WORKSPACE")"
           git config --global --add safe.directory '*'
-          find . -type f -name "configure" -exec sed -i 's/\r$//' {} +
-          find . -type f -name "*.sh" -exec sed -i 's/\r$//' {} +
+          chmod -R +w .
+          find . -type f -name "configure" -exec dos2unix {} +
+          find . -type f -name "*.sh" -exec dos2unix {} +
+          chmod +x ./win/configure
           ./win/configure
           make -j$(nproc)
 

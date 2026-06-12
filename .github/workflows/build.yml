@@ -19,7 +19,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: C:\tools\cygwin
-          key: cygwin-v2-${{ hashFiles('.github/workflows/build.yml') }}
+          key: cygwin-v3-${{ runner.os }}-pkg-v1
 
       - name: Setup Cygwin
         if: steps.cache-cygwin.outputs.cache-hit != 'true'
@@ -48,13 +48,13 @@ jobs:
           # Force conversion of all shebang scripts, configuration scripts, and Makefiles to Unix line endings
           grep -rlZI --exclude-dir=.git '^#!' . | xargs -0 dos2unix -f || true
           find . -type f \( -name "Configure" -o -name "configure" -o -name "*.sh" -o -name "install-sh" -o -name "config.sub" -o -name "config.guess" -o -name "Makefile" -o -name "Makefile.in" -o -name "make.include" -o -name "*.m4" -o -name "*.ac" \) -exec dos2unix -f {} + || true
-          # Make all shebang-starting files and configure/shell scripts executable
-          grep -rlZI --exclude-dir=.git '^#!' . | xargs -0 chmod +x || true
-          find . -type f \( -name "Configure" -o -name "configure" -o -name "*.sh" -o -name "install-sh" \) -exec chmod +x {} + || true
           # Prepend perl shebang to OpenSSL Configure so Cygwin can execute it directly
           sed -i '1s/^/#! \/usr\/bin\/perl\n/' openssl/Configure
           # Remove deprecated -mno-cygwin flag from OpenSSL Configure which causes modern GCC to fail
           sed -i 's/-mno-cygwin//g' openssl/Configure
+          # Make all shebang-starting files and configure/shell scripts executable AFTER all edits are done
+          grep -rlZI --exclude-dir=.git '^#!' . | xargs -0 chmod +x || true
+          find . -type f \( -name "Configure" -o -name "configure" -o -name "*.sh" -o -name "install-sh" \) -exec chmod +x {} + || true
           ./win/configure --host=x86_64-w64-mingw32
           make -j$(nproc)
 

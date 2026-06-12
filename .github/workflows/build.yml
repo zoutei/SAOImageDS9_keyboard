@@ -29,7 +29,7 @@ jobs:
           cd "$(cygpath "$GITHUB_WORKSPACE")"
           git config --global --add safe.directory '*'
           find . -type f \( -name "configure" -o -name "*.sh" -o -name "install-sh" -o -name "config.sub" -o -name "config.guess" \) -exec chmod +wx {} +
-          find . -type f \( -name "configure" -o -name "*.sh" -o -name "install-sh" -o -name "config.sub" -o -name "config.guess" \) -exec dos2unix {} +
+          find . -type f \( -name "configure" -o -name "*.sh" -o -name "install-sh" -o -name "config.sub" -o -name "config.guess" \) -exec dos2unix -f {} +
           ./win/configure
           make -j$(nproc)
 

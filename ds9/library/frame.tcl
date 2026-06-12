@@ -877,6 +877,14 @@ proc Button1Frame {which x y} {
 	    ColorbarButton3 $which $x $y
 	}
 	pan {
+	    if {$which != $current(frame)} {
+		# we need this cause MarkerMotion maybe called, 
+		# and we don't want it
+		set imarker(motion) none
+		set imarker(handle) -1
+
+		GotoFrame $which
+	    }
 	    $which pan motion begin $x $y
 	    set ds9(pan,start) [list $x $y]
 	}
@@ -1122,6 +1130,7 @@ proc Motion1Frame {which x y} {
 	pan {
 	    if {$ds9(b1)} {
 		$which pan motion $x $y
+		LockFrame $which
 	    }
 	}
 	zoom {}

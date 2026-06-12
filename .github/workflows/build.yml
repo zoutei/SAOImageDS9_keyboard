@@ -38,11 +38,11 @@ jobs:
           cd "$(cygpath "$GITHUB_WORKSPACE")"
           git config --global --add safe.directory '*'
           # Force conversion of all shebang scripts, configuration scripts, and Makefiles to Unix line endings
-          grep -rlZI --exclude-dir=.git '^#!' . | xargs -0 dos2unix -f
-          find . -type f \( -name "Configure" -o -name "configure" -o -name "*.sh" -o -name "install-sh" -o -name "config.sub" -o -name "config.guess" -o -name "Makefile" -o -name "Makefile.in" -o -name "make.include" -o -name "*.m4" -o -name "*.ac" \) -exec dos2unix -f {} +
+          grep -rlZI --exclude-dir=.git '^#!' . | xargs -0 dos2unix -f || true
+          find . -type f \( -name "Configure" -o -name "configure" -o -name "*.sh" -o -name "install-sh" -o -name "config.sub" -o -name "config.guess" -o -name "Makefile" -o -name "Makefile.in" -o -name "make.include" -o -name "*.m4" -o -name "*.ac" \) -exec dos2unix -f {} + || true
           # Make all shebang-starting files and configure/shell scripts executable
-          grep -rlZI --exclude-dir=.git '^#!' . | xargs -0 chmod +x
-          find . -type f \( -name "configure" -o -name "*.sh" -o -name "install-sh" \) -exec chmod +x {} +
+          grep -rlZI --exclude-dir=.git '^#!' . | xargs -0 chmod +x || true
+          find . -type f \( -name "configure" -o -name "*.sh" -o -name "install-sh" \) -exec chmod +x {} + || true
           # Remove deprecated -mno-cygwin flag from OpenSSL Configure which causes modern GCC to fail
           sed -i 's/-mno-cygwin//g' openssl/Configure
           ./win/configure --host=x86_64-w64-mingw32

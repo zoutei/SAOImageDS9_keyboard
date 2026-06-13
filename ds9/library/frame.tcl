@@ -1490,6 +1490,7 @@ proc KeyFrame {which K A xx yy} {
     }
 
     if {[ProcessShortcutKey $which $K $A $xx $yy]} {
+	set ds9(shortcut,processed) 1
 	return
     }
 

@@ -204,8 +204,13 @@ proc BindEventsCanvas {} {
 	win32 {}
     }
 
-    # iis
-    bind $ds9(canvas) <Key> {}
+    # iis / shortcut handler at canvas widget level
+    # Using 'if' + 'break' so handled shortcut keys don't propagate
+    # to canvas item bindings (KeyFrame) and fire twice.
+    bind $ds9(canvas) <Key> {
+	if {[CanvasShortcutKey %K %A]} { break }
+    }
+    bind $ds9(canvas) <KeyRelease> {CanvasShortcutKeyRelease %K %A}
     # freeze
     bind $ds9(canvas) <f> {ToggleFreeze}
 
@@ -214,7 +219,10 @@ proc BindEventsCanvas {} {
 	x11 -
 	aqua {
 	    bind $ds9(canvas) <Enter> [list focus $ds9(canvas)]
-	    bind $ds9(canvas) <Leave> [list focus {}]
+	    # Do NOT call focus {} on Leave — that would kill all key events
+	    # when cursor moves to menu bar, info panel, etc. The canvas
+	    # retains focus so shortcuts continue to work window-wide.
+	    bind $ds9(canvas) <Leave> {}
 	}
 	win32 {}
     }
@@ -258,8 +266,9 @@ proc UnBindEventsCanvas {} {
 	win32 {}
     }
 
-    # iis
+    # iis / shortcut
     bind $ds9(canvas) <Key> {}
+    bind $ds9(canvas) <KeyRelease> {}
     # freeze
     bind $ds9(canvas) <f> {}
 

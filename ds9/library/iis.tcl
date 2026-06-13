@@ -235,7 +235,11 @@ proc IISCursorModeCmd {state} {
 		CursorTimer
 	    }
 	} else {
-	    bind $ds9(canvas) <Key> {}
+	    # restore canvas-level shortcut handler
+	    bind $ds9(canvas) <Key> {
+		if {[CanvasShortcutKey %K %A]} { break }
+	    }
+	    bind $ds9(canvas) <KeyRelease> {CanvasShortcutKeyRelease %K %A}
 	    bind $ds9(canvas) <f> {ToggleFreeze}
 	    BindEventsFrameKey $which
 

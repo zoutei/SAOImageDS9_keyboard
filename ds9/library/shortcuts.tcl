@@ -335,3 +335,54 @@ proc ExecuteShortcutAction {which action} {
 	}
     }
 }
+
+# Called from canvas widget-level <Key> binding (not canvas item binding).
+# This fires when the cursor is over the canvas but NOT over a specific item
+# (colorbar, menu area, etc.) AND when canvas has focus (cursor over menu bar,
+# info panel, etc., as long as Leave did not call focus {}).
+# Returns 1 if the key was handled (caller should break), 0 otherwise.
+proc CanvasShortcutKey {K A} {
+    global current
+    global ds9
+
+    if {[info exists ds9(shortcut,processed)] && $ds9(shortcut,processed)} {
+	set ds9(shortcut,processed) 0
+	return 1
+    }
+
+    if {$K == {Control_R} ||
+	$K == {Control_L} ||
+	$K == {Meta_R} ||
+	$K == {Meta_L} ||
+	$K == {Alt_R} ||
+	$K == {Alt_L} ||
+	$K == {Super_R} ||
+	$K == {Super_L}} {
+	set ds9(modifier) 1
+	return 0
+    }
+
+    if {$ds9(modifier)} {
+	return 0
+    }
+
+    if {$current(frame) != {}} {
+	return [ProcessShortcutKey $current(frame) $K $A 0 0]
+    }
+    return 0
+}
+
+proc CanvasShortcutKeyRelease {K A} {
+    global ds9
+
+    if {$K == {Control_R} ||
+	$K == {Control_L} ||
+	$K == {Meta_R} ||
+	$K == {Meta_L} ||
+	$K == {Alt_R} ||
+	$K == {Alt_L} ||
+	$K == {Super_R} ||
+	$K == {Super_L}} {
+	set ds9(modifier) 0
+    }
+}

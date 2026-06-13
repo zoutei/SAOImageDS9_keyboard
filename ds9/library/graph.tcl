@@ -530,10 +530,11 @@ proc EnterGraph {frame which} {
 proc LeaveGraph {frame which} {
     set varname ${frame}gr
     global $varname
+    global ds9
 
     set gr [subst $${varname}($which)]
 
-    focus {}
+    focus $ds9(canvas)
     $gr crosshairs off
 
     LeaveInfoBox

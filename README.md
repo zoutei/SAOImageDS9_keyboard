@@ -13,6 +13,21 @@ The GUI for DS9 is user configurable. GUI elements such as the coordinate displa
 
 SAOImageDS9 is fully funded by the Chandra X-ray Science Center (CXC) and is licensed in part under the GNU General Public License, version 3.
 
+## Downloads
+
+You can download the compiled binaries from the [v8.7_keyboard Release Page](https://github.com/zoutei/SAOImageDS9_keyboard/releases/tag/v8.7_keyboard).
+
+> [!NOTE]
+> The macOS package is built as the Aqua version specifically for **Mac Apple Silicon**.
+
+### IMPORTANT - READ ME
+The installation for several versions may show warnings about "unknown developer" or "damaged application". If this is the case after the installation, run the following command at the prompt in a Terminal window:
+
+**Aqua installation:**
+```bash
+xattr -c /Applications/SAOImageDS9.app
+```
+
 ## Custom Features: Keyboard Shortcuts & None Edit Mode Pan
 
 This custom fork of SAOImageDS9 includes custom features designed to streamline data analysis workflows.

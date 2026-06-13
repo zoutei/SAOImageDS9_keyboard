@@ -223,6 +223,9 @@ proc BindEventsCanvas {} {
 	    # when cursor moves to menu bar, info panel, etc. The canvas
 	    # retains focus so shortcuts continue to work window-wide.
 	    bind $ds9(canvas) <Leave> {}
+
+	    bind $ds9(top) <FocusIn> {FocusInMain %W}
+	    bind $ds9(top) <Activate> {FocusInMain %W}
 	}
 	win32 {}
     }
@@ -1248,4 +1251,11 @@ proc ProcessSendViewCmd {proc id param {sock {}} {fn {}}} {
     viewsend::YY_FLUSH_BUFFER
     viewsend::yy_scan_string $param
     viewsend::yyparse
+}
+
+proc FocusInMain {w} {
+    global ds9
+    if {$w eq $ds9(top)} {
+	focus $ds9(canvas)
+    }
 }

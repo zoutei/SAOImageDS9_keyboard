@@ -27,20 +27,27 @@ This custom fork of SAOImageDS9 includes custom features designed to streamline 
 You can map keyboard sequences to predefined actions. Shortcuts support multi-key sequences (e.g., press `C` then `9` to set 90% scale).
 
 #### Default Bindings
-- `L`: Toggle scale and limits lock across all frames.
-- `I`: Toggle frame lock by **Image** (pixel coordinates).
-- `W`: Toggle frame lock by **WCS** (World Coordinate System).
-- `C9`: Set the scale limits mode to **90%**.
-- `C1`: Set the manual user limits range from **-10 to 10**.
-- `C5`: Set the manual user limits range from **-5 to 5**.
-- `C2`: Set the manual user limits range from **-20 to 20**.
-- `D`: Delete the current active frame.
-- `B`: Switch display to **Blink** mode.
-- `S`: Switch display to **Single** mode.
-- `T`: Switch display to **Tile** mode.
-- `P`: Switch interaction mode to **Pan**.
-- `R`: Switch interaction mode to **Region** (Pointer).
-- `N`: Switch interaction mode to **None**.
+- `L` / `l`: Toggle scale and limits lock across all frames.
+- `I` / `i`: Toggle frame lock by **Image** (pixel coordinates).
+- `W` / `w`: Toggle frame lock by **WCS** (World Coordinate System).
+- `C9` / `c9`: Set the scale limits mode to **90%**.
+- `C1` / `c1`: Set the manual user limits range from **-10 to 10**.
+- `C5` / `c5`: Set the manual user limits range from **-5 to 5**.
+- `C2` / `c2`: Set the manual user limits range from **-20 to 20**.
+- `D` / `d`: Delete the current active frame.
+- `B` / `b`: Switch display to **Blink** mode.
+- `S` / `s`: Switch display to **Single** mode.
+- `T` / `t`: Switch display to **Tile** mode.
+- `P` / `p`: Switch interaction mode to **Pan**.
+- `r` (lowercase): Switch interaction mode to **Region** (Pointer).
+- `R` (uppercase): Open a region file (`MarkerLoad`).
+- `N` / `n`: Switch interaction mode to **None**.
+
+#### Case Sensitivity
+Shortcut key sequences are matched case-sensitively first.
+- If you define actions for both lowercase and uppercase versions of a key (e.g., `r` and `R`), they will execute separate actions.
+- If a shortcut is defined for only one case (e.g., lowercase `l`), the matching logic falls back to case-insensitive matching if the other case is pressed (so pressing `L` will trigger the shortcut mapped to `l`).
+- Action names (e.g., `lock_scale_limits`, `scale`, etc.) are case-sensitive.
 
 #### How to Configure Custom Shortcuts
 You can customize these shortcut mappings by modifying or creating a configuration file named `shortcuts.cfg`.
@@ -61,7 +68,10 @@ I = lock_frame image
 W = lock_frame wcs
 C9 = scale 90
 C1 = range -10 10
+r = mode region
+R = MarkerLoad
 ```
+
 
 ### 2. None Edit Mode Drag-to-Pan
 When in `None` interaction mode (configured via the `Edit` menu or shortcut `N`), you can now click and drag with the left mouse button to pan the image directly without switching tools.

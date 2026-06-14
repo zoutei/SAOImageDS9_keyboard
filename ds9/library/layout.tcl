@@ -211,8 +211,6 @@ proc BindEventsCanvas {} {
 	if {[CanvasShortcutKey %K %A]} { break }
     }
     bind $ds9(canvas) <KeyRelease> {CanvasShortcutKeyRelease %K %A}
-    # freeze
-    bind $ds9(canvas) <f> {ToggleFreeze}
 
     # keyboard focus
     switch $ds9(wm) {
@@ -272,8 +270,6 @@ proc UnBindEventsCanvas {} {
     # iis / shortcut
     bind $ds9(canvas) <Key> {}
     bind $ds9(canvas) <KeyRelease> {}
-    # freeze
-    bind $ds9(canvas) <f> {}
 
     # keyboard focus
     switch $ds9(wm) {
@@ -1257,5 +1253,6 @@ proc FocusInMain {w} {
     global ds9
     if {$w eq $ds9(top)} {
 	focus $ds9(canvas)
+	set ds9(modifier) 0
     }
 }

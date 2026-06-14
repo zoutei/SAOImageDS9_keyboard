@@ -88,8 +88,13 @@ proc InitPanner {} {
 	win32 {}
     }
 
+    bind $ds9(panner,canvas) <Key> {
+	if {[CanvasShortcutKey %K %A]} { break }
+    }
+    bind $ds9(panner,canvas) <KeyRelease> {CanvasShortcutKeyRelease %K %A}
+
     bind $ds9(panner,canvas) <Enter> [list focus $ds9(panner,canvas)]
-    bind $ds9(panner,canvas) <Leave> [list focus {}]
+    bind $ds9(panner,canvas) <Leave> {}
 
     # compass
     panner compass $ppanner(compass)

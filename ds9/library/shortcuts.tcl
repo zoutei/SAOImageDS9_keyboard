@@ -43,6 +43,7 @@ proc LoadShortcutConfig {} {
     set shortcuts(map,r) "mode region"
     set shortcuts(map,R) "MarkerLoad"
     set shortcuts(map,n) "mode none"
+    set shortcuts(map,f) "freeze"
 
     # Search for config file
     set cfg_file ""
@@ -282,6 +283,9 @@ proc ExecuteShortcutAction {which action} {
     set args [lrange $action 1 end]
 
     switch -- $cmd {
+	freeze {
+	    ToggleFreeze
+	}
 	lock_scale_limits {
 	    set scale(lock,limits) [expr !$scale(lock,limits)]
 	    LockScaleLimitsCurrent

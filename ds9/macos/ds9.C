@@ -57,22 +57,38 @@ int SAOLocalMainHook(int* argcPtr, char*** argvPtr)
   // sync C++ io calls with C io calls
   ios::sync_with_stdio();
 
-  // use exec path
-  char** argv = *argvPtr;
-  char ss[PATHSIZE];
-  strncpy(ss,argv[0],PATHSIZE);
-
-  // now remove "MacOSX/ds9"
-  char* ptr = ss+strlen(ss);
-  while (*ptr != '/' && ptr != ss)
-    ptr--;
-  ptr--;
-  while (*ptr != '/' && ptr != ss)
-    ptr--;
-  *ptr = '\0';
-
-  // do this first
+  // Find executable first so Tcl can locate the absolute path via PATH
   Tcl_FindExecutable((*argvPtr)[0]);
+  const char* execPath = Tcl_GetNameOfExecutable();
+
+  // use exec path
+  char ss[PATHSIZE];
+
+  // Resolve symlinks and relative paths to get absolute binary path
+  char resolved[PATHSIZE];
+  if (execPath != NULL && realpath(execPath, resolved) != NULL) {
+    strncpy(ss, resolved, PATHSIZE);
+  } else {
+    strncpy(ss, (*argvPtr)[0], PATHSIZE);
+  }
+
+  // Safe backtracking to remove "MacOS/ds9" and locate "Contents"
+  int slashes = 0;
+  for (int idx = 0; ss[idx] != '\0'; idx++) {
+    if (ss[idx] == '/') {
+      slashes++;
+    }
+  }
+
+  if (slashes >= 2) {
+    char* ptr = ss+strlen(ss);
+    while (*ptr != '/' && ptr != ss)
+      ptr--;
+    ptr--;
+    while (*ptr != '/' && ptr != ss)
+      ptr--;
+    *ptr = '\0';
+  }
 
   // and add startup script
   strncat(ss,"/Frameworks/Tksao.framework/Resources/library/ds9.tcl",PATHSIZE);

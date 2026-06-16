@@ -19,6 +19,60 @@ You can download the compiled binaries from the [v8.7_keyboard Release Page](htt
 - **Linux**: Pre-compiled binaries are built for the latest Ubuntu version.
 - **Other Platforms**: For other platforms, you will need to compile the application yourself from source using `make`.
 
+## Command Line Usage (macOS Aqua)
+
+Although the macOS Aqua port is a native GUI application, this custom version supports direct command-line execution (including via symbolic links in your `$PATH`):
+
+1. **Create a Symbolic Link**:
+   Create a symlink to easily call the Aqua version of DS9 from any terminal session:
+   ```bash
+   ln -s /Applications/SAOImageDS9.app/Contents/MacOS/ds9 /usr/local/bin/ds9
+   ```
+
+2. **Control Range, Scale, and Regions**:
+   You can open images, adjust the scale range, and load region files directly from the command line:
+   ```bash
+   # Open a FITS file, set scale limits from 80 to 300, and load a region file
+   ds9 /path/to/image.fits -scalelimits 80 300 -regions /path/to/targets.reg
+   ```
+
+### Launching DS9 via macOS `open`
+
+You can launch the first instance of the application using the native macOS `open` command (which launches the bundle as a standard GUI application):
+```bash
+open -a SAOImageDS9
+```
+Or to start the program and immediately open a FITS file:
+```bash
+open -a SAOImageDS9 /path/to/image.fits
+```
+
+### Controlling an Already Running Instance (XPA)
+
+To load files into an **already running** instance of DS9 (without launching a new process), use the XPA (X Public Access) utilities (`xpaset` and `xpaget`) compiled in the source directory:
+
+1. **Create Symbolic Links**:
+   ```bash
+   ln -s /Users/kshukawa/Documents/SAOImageDS9/bin/xpaset /usr/local/bin/xpaset
+   ln -s /Users/kshukawa/Documents/SAOImageDS9/bin/xpaget /usr/local/bin/xpaget
+   ```
+
+2. **Send Commands using Unix Domain Sockets (`local` method)**:
+   To bypass potential macOS hostname lookup and firewall port blockages, prefix the commands with `XPA_METHOD=local`:
+   ```bash
+   # 1. Create a new frame in the active DS9 instance
+   XPA_METHOD=local xpaset -p ds9 frame new
+
+   # 2. Load a FITS file
+   XPA_METHOD=local xpaset -p ds9 file /path/to/image.fits
+
+   # 3. Adjust scale range limits
+   XPA_METHOD=local xpaset -p ds9 scale limits 80 300
+
+   # 4. Load the region file
+   XPA_METHOD=local xpaset -p ds9 regions file /path/to/targets.reg
+   ```
+
 ## Custom Features: Keyboard Shortcuts & None Edit Mode Pan
 
 This custom fork of SAOImageDS9 includes custom features designed to streamline data analysis workflows.

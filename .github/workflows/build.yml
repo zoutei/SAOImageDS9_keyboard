@@ -22,8 +22,32 @@ jobs:
 
       - name: Configure Build
         run: |
-          # Force linking against Xcode SDK system libraries to ensure portability
-          ./macos/configure XML2CONFIG=/usr/bin/xml2-config XSLTCONFIG=/usr/bin/xslt-config
+          # Create local xml2-config wrapper
+          cat << 'EOF' > xml2-config
+          #!/bin/sh
+          case "$1" in
+              --cflags) echo "-I$(xcrun --show-sdk-path)/usr/include/libxml2" ;;
+              --libs) echo "-lxml2" ;;
+              --version) echo "2.9.0" ;;
+              *) exit 1 ;;
+          esac
+          EOF
+          chmod +x xml2-config
+
+          # Create local xslt-config wrapper
+          cat << 'EOF' > xslt-config
+          #!/bin/sh
+          case "$1" in
+              --cflags) echo "-I$(xcrun --show-sdk-path)/usr/include" ;;
+              --libs) echo "-lxslt -lxml2" ;;
+              --version) echo "1.1.29" ;;
+              *) exit 1 ;;
+          esac
+          EOF
+          chmod +x xslt-config
+
+          # Configure build using local wrapper scripts
+          ./macos/configure XML2CONFIG=$(pwd)/xml2-config XSLTCONFIG=$(pwd)/xslt-config
 
       - name: Build
         run: make -j$(sysctl -n hw.ncpu)

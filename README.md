@@ -16,8 +16,7 @@ You can download the compiled binaries from the [v8.7_keyboard Release Page](htt
     ```bash
     xattr -c /Applications/SAOImageDS9.app
     ```
-- **Linux**: Pre-compiled binaries are built for the latest Ubuntu version.
-- **Other Platforms**: For other platforms, you will need to compile the application yourself from source using `make`.
+- **Other Platforms (including Linux)**: For other platforms, you will need to compile the application yourself from source using `make`.
 
 ## Command Line Usage (macOS Aqua)
 

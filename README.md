@@ -49,12 +49,13 @@ open -a SAOImageDS9 /path/to/image.fits
 
 ### Controlling an Already Running Instance (XPA)
 
-To load files into an **already running** instance of DS9 (without launching a new process), use the XPA (X Public Access) utilities (`xpaset` and `xpaget`) compiled in the source directory:
+To load files into an **already running** instance of DS9 (without launching a new process), use the XPA (X Public Access) utilities (`xpaset` and `xpaget`). Since these tools are embedded directly inside the macOS app bundle, you can link them to your path to use them globally:
 
 1. **Create Symbolic Links**:
    ```bash
-   ln -s /Users/kshukawa/Documents/SAOImageDS9/bin/xpaset /usr/local/bin/xpaset
-   ln -s /Users/kshukawa/Documents/SAOImageDS9/bin/xpaget /usr/local/bin/xpaget
+   # Create a symlink to easily run the XPA utilities from anywhere
+   sudo ln -sf /Applications/SAOImageDS9.app/Contents/Resources/bin/xpaset /usr/local/bin/xpaset
+   sudo ln -sf /Applications/SAOImageDS9.app/Contents/Resources/bin/xpaget /usr/local/bin/xpaget
    ```
 
 2. **Send Commands using Unix Domain Sockets (`local` method)**:

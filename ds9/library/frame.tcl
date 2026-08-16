@@ -850,6 +850,7 @@ proc Button1Frame {which x y} {
 	    }
 	    if {$ppanzoom(none,pan)} {
 		$which pan motion begin $x $y
+		set ds9(pan,start) [list $x $y]
 	    }
 	}
 	pointer -
@@ -885,8 +886,7 @@ proc Button1Frame {which x y} {
 
 		GotoFrame $which
 	    }
-	    $which pan motion begin $x $y
-	    set ds9(pan,start) [list $x $y]
+	    PanButton $which $x $y
 	}
 	zoom {
 	    ZoomButton $which $x $y
@@ -1129,8 +1129,7 @@ proc Motion1Frame {which x y} {
 	}
 	pan {
 	    if {$ds9(b1)} {
-		$which pan motion $x $y
-		LockFrame $which
+		PanMotion $which $x $y
 	    }
 	}
 	zoom {}
@@ -1202,7 +1201,15 @@ proc Release1Frame {which x y} {
 	    if {$ppanzoom(none,pan)} {
 		if {$ds9(b1)} {
 		    $which pan motion end $x $y
-		    UpdatePan $which
+		    if {[info exists ds9(pan,start)]} {
+			set x_start [lindex $ds9(pan,start) 0]
+			set y_start [lindex $ds9(pan,start) 1]
+			set dx [expr abs($x - $x_start)]
+			set dy [expr abs($y - $y_start)]
+			if {$dx >= 3 || $dy >= 3} {
+			    UpdatePan $which
+			}
+		    }
 		}
 	    }
 	}
@@ -1228,17 +1235,7 @@ proc Release1Frame {which x y} {
 	}
 	pan {
 	    if {$ds9(b1)} {
-		$which pan motion end $x $y
-		if {[info exists ds9(pan,start)]} {
-		    set x_start [lindex $ds9(pan,start) 0]
-		    set y_start [lindex $ds9(pan,start) 1]
-		    set dx [expr abs($x - $x_start)]
-		    set dy [expr abs($y - $y_start)]
-		    if {$dx < 3 && $dy < 3} {
-			$which pan to $x $y
-		    }
-		}
-		UpdatePan $which
+		PanRelease $which $x $y
 	    }
 	}
 	zoom {}

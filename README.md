@@ -127,9 +127,19 @@ R = MarkerLoad
 ```
 
 
-### 2. None Edit Mode Drag-to-Pan
-When in `None` interaction mode (configured via the `Edit` menu or shortcut `N`), you can now click and drag with the left mouse button to pan the image directly without switching tools.
-- To enable or disable this feature, open **Preferences** -> **Pan/Zoom** -> **None Edit Mode** and toggle **Drag to Pan**.
+### 2. Enhanced Pan Modes & Drag-to-Pan
+
+#### Pan Zoom Modes
+Under **Preferences** -> **Pan Zoom**, you can configure how mouse interaction operates in Pan mode:
+* **Click to Center & Drag to Pan (Default)**: Hybrid mode providing both interactions seamlessly. Static clicks (< 3px) instantly center the image at the clicked coordinate, while dragging (≥ 3px) smoothly pans the image in real-time.
+* **Click to Center**: Classic DS9 behavior where clicking recenters the frame; dragging does not pan.
+* **Drag to Pan**: Dragging with the mouse smoothly pans the canvas; static clicks do not displace the image.
+* **Pan then Zoom**: Clicking centers the target and successive clicks cycle through zoom magnification levels ($2\times \to 4\times \to 8\times \to 1\times$).
+
+#### None Edit Mode Drag-to-Pan
+When in `None` interaction mode (configured via the `Edit` menu or shortcut `N`), you can directly click and drag with the left mouse button to smoothly pan the image without needing to change tools.
+* Static clicks simply select and focus the active frame without unintended displacement.
+* To enable or disable this feature, open **Preferences** -> **Pan Zoom** -> **None Edit Mode** and toggle **Drag to Pan** (enabled by default).
 
 ## About SAOImageDS9
 

@@ -142,14 +142,17 @@ proc PrefsDialogZoom {} {
     # PanZoom
     set f [ttk::labelframe $w.zoom.panzoom -text [msgcat::mc {Pan Zoom}]]
 
+    ttk::radiobutton $f.clickdrag -text [msgcat::mc {Click to Center & Drag to Pan}] \
+	-variable ppanzoom(mode) -value clickdrag
     ttk::radiobutton $f.click -text [msgcat::mc {Click to Center}] \
 	-variable ppanzoom(mode) -value click
-    ttk::radiobutton $f.drag -text [msgcat::mc {Drag to Center}] \
+    ttk::radiobutton $f.drag -text [msgcat::mc {Drag to Pan}] \
 	-variable ppanzoom(mode) -value drag
     ttk::radiobutton $f.panzoom -text [msgcat::mc {Pan then Zoom}] \
 	-variable ppanzoom(mode) -value panzoom
 
-    grid $f.click $f.drag $f.panzoom -padx 2 -pady 2 -sticky w
+    grid $f.clickdrag $f.click -padx 2 -pady 2 -sticky w
+    grid $f.drag $f.panzoom -padx 2 -pady 2 -sticky w
 
     # None Mode Pan
     set f2 [ttk::labelframe $w.zoom.none -text [msgcat::mc {None Edit Mode}]]

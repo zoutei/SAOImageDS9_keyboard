@@ -28,7 +28,7 @@ proc PanZoomDef {} {
     set ppanzoom(preserve) $panzoom(preserve)
 
     # prefs only
-    set ppanzoom(mode) click
+    set ppanzoom(mode) clickdrag
     set ppanzoom(wheel) 1
     set ppanzoom(wheel,factor) 1.2
     set panzoom(none,pan) 1
@@ -102,11 +102,18 @@ proc PanToFrame {which x y sys sky} {
 }
 
 proc PanButton {which x y} {
+    global ds9
     global ppanzoom
 
     switch -- $ppanzoom(mode) {
 	click {}
-	drag {$which pan motion begin $x $y}
+	drag {
+	    $which pan motion begin $x $y
+	}
+	clickdrag {
+	    $which pan motion begin $x $y
+	    set ds9(pan,start) [list $x $y]
+	}
 	panzoom {}
     }
 }
@@ -116,7 +123,8 @@ proc PanMotion {which x y} {
 
     switch -- $ppanzoom(mode) {
 	click {}
-	drag {
+	drag -
+	clickdrag {
 	    $which pan motion $x $y
 	    LockFrame $which
 	}
@@ -125,14 +133,34 @@ proc PanMotion {which x y} {
 }
 
 proc PanRelease {which x y} {
+    global ds9
     global panzoom
     global ipanzoom
     global ppanzoom
     global current
 
     switch -- $ppanzoom(mode) {
-	click {$which pan to $x $y}
-	drag {$which pan motion end $x $y}
+	click {
+	    $which pan to $x $y
+	    UpdatePan $which
+	}
+	drag {
+	    $which pan motion end $x $y
+	    UpdatePan $which
+	}
+	clickdrag {
+	    $which pan motion end $x $y
+	    if {[info exists ds9(pan,start)]} {
+		set x_start [lindex $ds9(pan,start) 0]
+		set y_start [lindex $ds9(pan,start) 1]
+		set dx [expr abs($x - $x_start)]
+		set dy [expr abs($y - $y_start)]
+		if {$dx < 3 && $dy < 3} {
+		    $which pan to $x $y
+		}
+	    }
+	    UpdatePan $which
+	}
 	panzoom {
 	    if {$ipanzoom(last) != "$x $y"} {
 		set ipanzoom(state) 1
@@ -178,10 +206,9 @@ proc PanRelease {which x y} {
 	    if {$which == $current(frame)} {
 		set current(zoom) [$current(frame) get zoom]
 	    }
+	    UpdatePan $which
 	}
     }
-
-    UpdatePan $which
 }
 
 proc PreservePan {} {

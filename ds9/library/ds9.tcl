@@ -459,10 +459,20 @@ switch $ds9(wm) {
 
 	event add <<PageSetup>> <${ds9(shiftctrl)}P>
 	event add <<SelectNone>> <${ds9(shiftctrl)}A>
+	event add <<ResetColormap>> <${ds9(shiftctrl)}C>
+	event add <<DeleteAllAndOpen>> <${ds9(shiftctrl)}R>
     }
     aqua {
 	event add <<PageSetup>> <${ds9(shiftctrl)}p>
 	event add <<SelectNone>> <${ds9(shiftctrl)}a>
+	event add <<ResetColormap>> <${ds9(shiftctrl)}c>
+	event add <<ResetColormap>> <${ds9(shiftctrl)}C>
+	event add <<ResetColormap>> <Shift-Control-c>
+	event add <<ResetColormap>> <Shift-Control-C>
+	event add <<DeleteAllAndOpen>> <${ds9(shiftctrl)}r>
+	event add <<DeleteAllAndOpen>> <${ds9(shiftctrl)}R>
+	event add <<DeleteAllAndOpen>> <Shift-Control-r>
+	event add <<DeleteAllAndOpen>> <Shift-Control-R>
     }
 }
 

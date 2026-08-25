@@ -78,9 +78,11 @@ To load files into an **already running** instance of DS9 (without launching a n
 This custom fork of SAOImageDS9 includes custom features designed to streamline data analysis workflows.
 
 ### 1. Customizable Keyboard Shortcuts
-You can map keyboard sequences to predefined actions. Shortcuts support multi-key sequences (e.g., press `C` then `9` to set 90% scale).
+You can map keyboard sequences to predefined actions. Shortcuts support multi-key sequences (e.g., press `C` then `9` to set 90% scale), as well as standard global keyboard accelerators.
 
-#### Default Bindings
+#### Default Bindings & Accelerators
+- `Ctrl+Shift+C` / `Cmd+Shift+C`: Reset colormap bias/contrast and default colormap (**Color -> Reset Colormap**).
+- `Ctrl+Shift+R` / `Cmd+Shift+R`: Delete all regions from **all** frames and open a region file (**Region -> Delete All and Open**).
 - `L` / `l`: Toggle scale and limits lock across all frames.
 - `I` / `i`: Toggle frame lock by **Image** (pixel coordinates).
 - `W` / `w`: Toggle frame lock by **WCS** (World Coordinate System).
@@ -101,7 +103,7 @@ You can map keyboard sequences to predefined actions. Shortcuts support multi-ke
 Shortcut key sequences are matched case-sensitively first.
 - If you define actions for both lowercase and uppercase versions of a key (e.g., `r` and `R`), they will execute separate actions.
 - If a shortcut is defined for only one case (e.g., lowercase `l`), the matching logic falls back to case-insensitive matching if the other case is pressed (so pressing `L` will trigger the shortcut mapped to `l`).
-- Action names (e.g., `lock_scale_limits`, `scale`, etc.) are case-sensitive.
+- Action names (e.g., `lock_scale_limits`, `reset_colormap`, `delete_all_regions_load`, etc.) are case-sensitive.
 
 #### How to Configure Custom Shortcuts
 You can customize these shortcut mappings by modifying or creating a configuration file named `shortcuts.cfg`.
@@ -124,6 +126,7 @@ C9 = scale 90
 C1 = range -10 10
 r = mode region
 R = MarkerLoad
+c0 = reset_colormap
 ```
 
 

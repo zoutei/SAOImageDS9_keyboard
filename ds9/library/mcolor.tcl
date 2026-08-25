@@ -59,7 +59,7 @@ proc ColorMainMenu {} {
     $ds9(mb).color add checkbutton -label [msgcat::mc {Invert Colormap}] \
 	-variable colorbar(invert) -command InvertColorbar
     $ds9(mb).color add command -label [msgcat::mc {Reset Colormap}] \
-	-command ResetColormap
+	-command ResetColormap -accelerator "${ds9(shiftctrl)}C"
     $ds9(mb).color add separator
     $ds9(mb).color add cascade -label [msgcat::mc {Colorbar}] \
 	-menu $ds9(mb).color.colorbar
@@ -104,6 +104,9 @@ proc ColorMainMenu {} {
 
     FontMenu $ds9(mb).color.colorbar.cb colorbar font font,size font,weight \
 	font,slant ColorbarUpdateView
+
+    # Bindings
+    bind $ds9(top) <<ResetColormap>> ResetColormap
 }
 
 proc ColorMainMenuExternal {which} {

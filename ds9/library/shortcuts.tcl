@@ -328,6 +328,15 @@ proc ExecuteShortcutAction {which action} {
 	    set m [lindex $args 0]
 	    ChangeModeItem $m
 	}
+	reset_colormap {
+	    ResetColormap
+	}
+	delete_all_regions {
+	    MarkerDeleteAllFrames
+	}
+	delete_all_regions_load {
+	    MarkerDeleteLoad
+	}
 	tcl {
 	    eval [join $args " "]
 	}

@@ -1021,6 +1021,18 @@ proc MarkerDeleteAll {} {
     return 1
 }
 
+proc MarkerDeleteAllFrames {} {
+    global ds9
+
+    foreach ff $ds9(frames) {
+	$ff marker delete
+    }
+    UpdateGroupDialog
+    UpdateEditMenu
+
+    return 1
+}
+
 proc MarkerDeleteSelect {} {
     global current
     
@@ -1033,7 +1045,7 @@ proc MarkerDeleteSelect {} {
 }
 
 proc MarkerDeleteLoad {} {
-    MarkerDeleteAll
+    MarkerDeleteAllFrames
     MarkerLoad
 }
 

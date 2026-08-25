@@ -73,7 +73,7 @@ proc RegionMainMenu {} {
     $ds9(mb).region add command -label [msgcat::mc {Delete All}] \
 	-command MarkerDeleteAll
     $ds9(mb).region add command -label [msgcat::mc {Delete All and Open}] \
-	-command MarkerDeleteLoad
+	-command MarkerDeleteLoad -accelerator "${ds9(shiftctrl)}R"
     $ds9(mb).region add separator
     $ds9(mb).region add cascade -label [msgcat::mc {Region Parameters}] \
 	-menu $ds9(mb).region.params
@@ -218,6 +218,7 @@ proc RegionMainMenu {} {
     # Bindings
     bind $ds9(top) <<SelectAll>> MarkerSelectAll
     bind $ds9(top) <<SelectNone>> MarkerSelectNone
+    bind $ds9(top) <<DeleteAllAndOpen>> MarkerDeleteLoad
 }
 
 proc PrefsDialogRegionMenu {w} {
